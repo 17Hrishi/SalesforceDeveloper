@@ -1,0 +1,22 @@
+trigger LogServiceRequestChanges on Service_Request__c (after update) {
+    List<Service_Request_Log__c> logEntries = new List<Service_Request_Log__c>();
+    
+    for(Service_Request__c request : Trigger.New) {
+        Service_Request__c oldRequest = Trigger.oldMap.get(request.Id);
+        // Log changes if there are differences in key fields
+        if(request.Request_Status__c != oldRequest.Request_Status__c || request.Priority__c != oldRequest.Priority__c) {
+            Service_Request_Log__c logEntry = new Service_Request_Log__c(
+                Request__c = request.Id,
+                Old_Status__c = oldRequest.Request_Status__c,
+                New_Status__c = request.Request_Status__c,
+                Old_Priority__c = oldRequest.Priority__c,
+                New_Priority__c = request.Priority__c
+            );
+            logEntries.add(logEntry);
+        }
+    }
+    
+    if(!logEntries.isEmpty()) {
+        insert logEntries;
+    }
+}
