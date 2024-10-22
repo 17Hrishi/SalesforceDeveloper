@@ -1,0 +1,9 @@
+trigger UpdateTicketStatus on Service_Ticket__c (after update) {
+    for(Service_Ticket__c ticket : Trigger.New) {
+        // Check if the ticket status has changed to 'Closed'
+        if(ticket.Status__c == 'Closed' && Trigger.oldMap.get(ticket.Id).Status__c != 'Closed') {
+            // Perform any additional logic here, e.g., sending a notification
+            System.debug('Ticket closed: ' + ticket.Id);
+        }
+    }
+}
