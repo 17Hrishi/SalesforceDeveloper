@@ -1,0 +1,5 @@
+Service_Ticket__c newTicket = new Service_Ticket__c(
+    Subject__c = 'Test IT Ticket',
+    Request_Type__c = 'IT'
+);
+insert newTicket;
