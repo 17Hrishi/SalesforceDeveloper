@@ -1,0 +1,20 @@
+public class ServiceRequestApproval {
+    public static void submitForApproval(Id requestId) {
+        try {
+            // Fetch the service request
+            Service_Request__c request = [SELECT Id, Request_Status__c FROM Service_Request__c WHERE Id = :requestId LIMIT 1];
+
+            // Create an approval request
+            Approval.ProcessSubmitRequest approvalRequest = new Approval.ProcessSubmitRequest();
+            approvalRequest.setObjectId(request.Id);
+
+            // Submit the request for approval
+            Approval.ProcessResult result = Approval.process(approvalRequest);
+
+            // Optionally, handle approval result or error
+            System.debug('Approval submitted for request: ' + request.Id);
+        } catch (Exception e) {
+            System.debug('Error during approval submission: ' + e.getMessage());
+        }
+    }
+}
