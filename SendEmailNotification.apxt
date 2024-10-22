@@ -1,0 +1,12 @@
+trigger SendEmailNotification on Service_Ticket__c (after insert) {
+    for(Service_Ticket__c ticket : Trigger.New) {
+        // Prepare the email
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setToAddresses(new String[] {ticket.CreatedBy.Email});
+        mail.setSubject('New Service Ticket Created: ' + ticket.Subject__c);
+        mail.setPlainTextBody('A new service ticket has been created with ID: ' + ticket.Id + '. Please check your dashboard for details.');
+
+        // Send the email
+        Messaging.sendEmail(new Messaging.SingleEmailMessage[] {mail});
+    }
+}
