@@ -1,0 +1,27 @@
+public class ServiceRequestApprovalProcess {
+    
+    public static void submitForApproval(Id requestId) {
+        try {
+            // Fetch the service request
+            Service_Request__c request = [SELECT Id, Request_Status__c FROM Service_Request__c WHERE Id = :requestId LIMIT 1];
+            
+            // Check if the request is not already submitted
+            if(request.Request_Status__c != 'Submitted') {
+                // Create an approval process instance
+                Approval.ProcessSubmitRequest req = new Approval.ProcessSubmitRequest();
+                req.setObjectId(request.Id);
+                
+                // Submit the request for approval
+                Approval.ProcessResult result = Approval.process(req);
+                
+                // Update the service request status to 'Submitted'
+                request.Request_Status__c = 'Submitted';
+                update request;
+                
+                System.debug('Service request submitted for approval');
+            }
+        } catch (Exception e) {
+            System.debug('Error during approval process: ' + e.getMessage());
+        }
+    }
+}
