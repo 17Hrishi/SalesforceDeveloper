@@ -1,0 +1,12 @@
+trigger AutoAssignTickets on Service_Ticket__c (before insert) {
+    for(Service_Ticket__c ticket : Trigger.New) {
+        // Assign to the appropriate queue based on the request type
+        if(ticket.Request_Type__c == 'Maintenance') {
+            ticket.OwnerId = [SELECT Id FROM Group WHERE Name = 'Maintenance_Team' LIMIT 1].Id;
+        } else if(ticket.Request_Type__c == 'IT Support') {
+            ticket.OwnerId = [SELECT Id FROM Group WHERE Name = 'IT_Support_Team' LIMIT 1].Id;
+        } else {
+            ticket.OwnerId = [SELECT Id FROM Group WHERE Name = 'General_Support_Team' LIMIT 1].Id;
+        }
+    }
+}
