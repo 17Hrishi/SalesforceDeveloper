@@ -1,0 +1,4 @@
+OR(
+    ISPICKVAL(Priority__c, 'High'),
+    Estimated_Cost__c > 1000
+)
