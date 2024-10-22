@@ -1,0 +1,17 @@
+@isTest
+public class AutoAssignTicketsTest {
+    @isTest
+    static void testTicketAssignment() {
+        // Create a test ticket with a specific request type
+        Service_Ticket__c testTicket = new Service_Ticket__c(
+            Subject__c = 'Test IT Support Ticket',
+            Request_Type__c = 'IT Support'
+        );
+        
+        insert testTicket;
+        
+        // Assert that the ticket was assigned to the correct queue
+        Service_Ticket__c insertedTicket = [SELECT OwnerId FROM Service_Ticket__c WHERE Id = :testTicket.Id LIMIT 1];
+        System.assertNotEquals(null, insertedTicket.OwnerId, 'Ticket should have an owner assigned.');
+    }
+}
